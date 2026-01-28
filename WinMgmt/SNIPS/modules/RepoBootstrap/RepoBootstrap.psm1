@@ -26,6 +26,16 @@
     .PARAMETER NoPush
         If specified, performs all local changes and commits, but does not push to origin.
 
+    .PARAMETER Owner
+        DEV ONLY.
+        Overrides GitHub owner resolution. Intended for testing, CI, or offline runs.
+
+    .PARAMETER RepoPathOverride
+        DEV ONLY.
+        Operate on an existing local repository path instead of cloning.
+        Intended for Pester tests and sandbox execution.
+
+
     .EXAMPLE
         Invoke-RepoStructureBootstrap
 
@@ -181,22 +191,38 @@ function Invoke-RepoStructureBootstrap {
     Write-Verbose "Using supplied Owner override: $Owner"
     $owner = $Owner
 }
-else {
-    $owner = (gh api user --jq .login).Trim()
-    if (-not $owner) {
-        throw "Unable to determine GitHub username. Run: gh auth status or supply -Owner."
+    else {
+        $owner = (gh api user --jq .login).Trim()
+        if (-not $owner) {
+            throw "Unable to determine GitHub username. Run: gh auth status or supply -Owner."
+        }
     }
-}
 
 
-        $fullName = "$owner/$RepoName"
-        $repoPath = Join-Path $BasePath $RepoName
+       $fullName = "$owner/$RepoName"
 
-        if (-not (Test-Path -LiteralPath $repoPath)) {
-            if ($PSCmdlet.ShouldProcess($repoPath, "Clone repo $fullName")) {
-                gh repo clone $fullName
+        if ($RepoPathOverride) {
+            Write-Verbose "Using RepoPathOverride: $RepoPathOverride"
+            $repoPath = $RepoPathOverride
+        }
+        else {
+            $repoPath = Join-Path $BasePath $RepoName
+        }
+
+
+        if (-not $RepoPathOverride) {
+            if (-not (Test-Path -LiteralPath $repoPath)) {
+                if ($PSCmdlet.ShouldProcess($repoPath, "Clone repo $fullName")) {
+                    gh repo clone $fullName
+                }
             }
         }
+        else {
+            if (-not (Test-Path -LiteralPath $repoPath)) {
+                throw "RepoPathOverride '$repoPath' does not exist."
+            }
+        }
+
 
         Set-Location $repoPath
 

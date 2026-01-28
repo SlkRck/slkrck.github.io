@@ -153,8 +153,18 @@ function Invoke-RepoStructureBootstrap {
         [string]$CommitMsg = "Add baseline folder structure + README table of contents",
 
         [Parameter()]
-        [switch]$NoPush
-    )
+        [switch]$NoPush,
+    
+
+    # DEV-ONLY OVERRIDES
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$Owner,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$RepoPathOverride
+)
 
     Assert-Command gh
     Assert-Command git
@@ -167,8 +177,17 @@ function Invoke-RepoStructureBootstrap {
 
     Push-Location $BasePath
     try {
-        $owner = (gh api user --jq .login).Trim()
-        if (-not $owner) { throw "Unable to determine GitHub username. Run: gh auth status" }
+        if ($Owner) {
+    Write-Verbose "Using supplied Owner override: $Owner"
+    $owner = $Owner
+}
+else {
+    $owner = (gh api user --jq .login).Trim()
+    if (-not $owner) {
+        throw "Unable to determine GitHub username. Run: gh auth status or supply -Owner."
+    }
+}
+
 
         $fullName = "$owner/$RepoName"
         $repoPath = Join-Path $BasePath $RepoName

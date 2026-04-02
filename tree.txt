@@ -1,0 +1,68 @@
+|-- Azure
+  |-- PesterTests
+  |-- README.md
+  |-- SCRIPTS
+    |-- Inspect-AzureInventory.ps1
+  |-- SNIPS
+    |-- functions
+      |-- README.md
+    |-- modules
+      |-- README.md
+    |-- README.md
+|-- build
+  |-- Build.ps1
+  |-- Insert-ReadmeHeader.ps1
+  |-- Invoke-RepoPester.ps1
+  |-- tools
+    |-- DocTools.ps1
+    |-- README.md
+    |-- Show-RepoTree.ps1
+    |-- TreeTool.ps1
+|-- index.html
+|-- README.md
+|-- Terraform
+  |-- Modules
+    |-- Examples
+      |-- README.md
+    |-- README.md
+  |-- README.md
+|-- tests
+  |-- style
+    |-- Style.HeaderCompliance.Tests.ps1
+|-- tree.txt
+|-- WinMgmt
+  |-- MODULES
+    |-- WinMgmt
+      |-- WinMgmt.psd1
+      |-- WinMgmt.psm1
+  |-- PesterTests
+    |-- WinMgmt.StarterSet.Tests.ps1
+  |-- README.md
+  |-- SCRIPTS
+    |-- get-remoteNetAdptrWrapper.ps1
+    |-- Invoke-WinMgmtMenu.ps1
+    |-- Invoke-WinMgmtStarterSetSmokeTest.ps1
+    |-- README.md
+    |-- Show-SystemStatus.ps1
+  |-- SNIPS
+    |-- createsession-CIMWinRM.ps1
+    |-- functions
+      |-- Assert-RunningAsAdmin.ps1
+      |-- Get-RemoteNetworkAdapterInfo.ps1
+      |-- New-WinRmCimSession.ps1
+      |-- README.md
+      |-- Remove-SafeCimSession.ps1
+      |-- Test-HostReachable.ps1
+      |-- Test-WinRmReady.ps1
+    |-- get-wifistates.ps1
+    |-- modules
+      |-- README.md
+      |-- RepoBootstrap
+        |-- build
+          |-- Build.ps1
+        |-- RepoBootstrap.psd1
+        |-- RepoBootstrap.psm1
+        |-- tests
+          |-- RepoBootstrap.Tests.ps1
+    |-- README.md
+    |-- Show-DirectoryTree.ps1

@@ -86,6 +86,7 @@ function New-TaskObject {
         Quadrant   = $Quadrant
         Level      = $Level
         DueOn      = $DueOn
+        Done       = $false
         SortOrder  = $script:NextSort
         CreatedOn  = (Get-Date).ToString('o')
     }

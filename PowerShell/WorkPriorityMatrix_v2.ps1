@@ -941,6 +941,25 @@ Register-DragDrop $q2.ListBox
 Register-DragDrop $q3.ListBox
 Register-DragDrop $q4.ListBox
 
+# ── Checkbox toggle: left-click in the first 22px of any row ─────
+foreach ($qid in @('Q1','Q2','Q3','Q4')) {
+    $script:QuadListBox[$qid].Add_MouseUp({
+        param($s,$e)
+        if ($e.Button -ne [System.Windows.Forms.MouseButtons]::Left) { return }
+        if ($e.X -gt 22) { return }
+        $idx = $s.IndexFromPoint($e.Location)
+        if ($idx -lt 0) { return }
+        $qid2 = $s.Tag.ToString()
+        $vis  = @($script:Tasks | Where-Object { $_.Quadrant -eq $qid2 } | Sort-Object SortOrder)
+        if ($idx -lt $vis.Count) {
+            $vis[$idx].Done = -not $vis[$idx].Done
+            Refresh-AllListBoxes
+            $doneMsg = if ($vis[$idx].Done) { 'Completed' } else { 'Uncompleted' }
+            Set-Status "$doneMsg '$($vis[$idx].Name)'."
+        }
+    })
+}
+
 # ══════════════════════════════════════════════════════════════════
 #  SAVE / LOAD / EXPORT
 # ══════════════════════════════════════════════════════════════════

@@ -991,7 +991,7 @@ function Export-ToCsv {
     if ($dlg.ShowDialog() -ne 'OK') { return }
     try {
         $script:Tasks | Sort-Object Quadrant,SortOrder |
-            Select-Object Quadrant,Level,Name,Importance,Urgency,DueOn,CreatedOn |
+            Select-Object Quadrant,Level,Name,Importance,Urgency,DueOn,Done,CreatedOn |
             Export-Csv -Path $dlg.FileName -NoTypeInformation -Encoding UTF8
         Set-Status "Exported to $(Split-Path $dlg.FileName -Leaf)"
     } catch {

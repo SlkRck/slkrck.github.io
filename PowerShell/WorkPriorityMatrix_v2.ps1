@@ -966,6 +966,7 @@ function Load-FromJson {
                 Quadrant   = $r.Quadrant
                 Level      = $r.Level
                 DueOn      = if ($r.DueOn)     { $r.DueOn }     else { '' }
+                Done       = if ($r.PSObject.Properties['Done']) { [bool]$r.Done } else { $false }
                 SortOrder  = if ($r.SortOrder) { [int]$r.SortOrder } else { ++$maxSort }
                 CreatedOn  = if ($r.CreatedOn) { $r.CreatedOn } else { (Get-Date).ToString('o') }
             }

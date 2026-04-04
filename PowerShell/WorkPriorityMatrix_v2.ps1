@@ -926,6 +926,8 @@ function Register-DragDrop ([System.Windows.Forms.ListBox]$lb) {
     $lb.Add_DoubleClick({
         param($s,$e)
         try {
+            $curPt = $s.PointToClient([System.Windows.Forms.Cursor]::Position)
+            if ($curPt.X -le 22) { return }   # checkbox column — ignore double-click
             $idx = $s.SelectedIndex; if ($idx -lt 0) { return }
             $qid = $s.Tag.ToString()
             $vis = @($script:Tasks | Where-Object { $_.Quadrant -eq $qid } | Sort-Object SortOrder)

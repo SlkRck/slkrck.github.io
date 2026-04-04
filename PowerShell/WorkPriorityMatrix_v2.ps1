@@ -845,6 +845,7 @@ function Register-DragDrop ([System.Windows.Forms.ListBox]$lb) {
         param($s,$e)
         try {
             if ($e.Button -ne [System.Windows.Forms.MouseButtons]::Left) { return }
+            if ($e.X -le 22) { return }   # checkbox column — handled by MouseUp
             $idx = $s.IndexFromPoint($e.Location)
             if ($idx -lt 0) { return }
             $s.SelectedIndex = $idx

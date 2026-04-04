@@ -508,6 +508,11 @@ function Enable-AlertDraw ([System.Windows.Forms.ListBox]$lb) {
             if ($e.Index -lt 0) { return }
             $itemText = $s.Items[$e.Index].ToString()
 
+            # Look up Done state by index
+            $qid2 = $s.Tag.ToString()
+            $vis  = @($script:Tasks | Where-Object { $_.Quadrant -eq $qid2 } | Sort-Object SortOrder)
+            $isDone  = $e.Index -lt $vis.Count -and $vis[$e.Index].Done
+
             $isAlert    = $script:AlertLabels.ContainsKey($itemText)
             $isSelected = ($e.State -band [System.Windows.Forms.DrawItemState]::Selected) -ne 0
 
@@ -519,12 +524,23 @@ function Enable-AlertDraw ([System.Windows.Forms.ListBox]$lb) {
                 $fg = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(180,0,0))
             } else {
                 $bg = New-Object System.Drawing.SolidBrush($s.BackColor)
-                $fg = New-Object System.Drawing.SolidBrush($s.ForeColor)
+                $fg = New-Object System.Drawing.SolidBrush($(if ($isDone) { [System.Drawing.Color]::Gray } else { $s.ForeColor }))
             }
 
             $e.Graphics.FillRectangle($bg, $e.Bounds)
-            $e.Graphics.DrawString($itemText, $s.Font, $fg,
+
+            # Checkbox glyph
+            $cbChar = if ($isDone) { [char]0x2611 } else { [char]0x2610 }   # ☑ or ☐
+            $e.Graphics.DrawString($cbChar, $s.Font, $fg,
                 [float]($e.Bounds.X + 2), [float]($e.Bounds.Y + 2))
+
+            # Task text — strikethrough when done
+            $textFont = if ($isDone) {
+                New-Object System.Drawing.Font($s.Font, [System.Drawing.FontStyle]::Strikeout)
+            } else { $s.Font }
+            $e.Graphics.DrawString($itemText, $textFont, $fg,
+                [float]($e.Bounds.X + 22), [float]($e.Bounds.Y + 2))
+            if ($isDone) { $textFont.Dispose() }
 
             if (-not $isSelected) { $bg.Dispose(); $fg.Dispose() }
         } catch {}
